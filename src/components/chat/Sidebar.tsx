@@ -74,6 +74,28 @@ function Sidebar() {
           )}
         </div>
       </ScrollArea>
+
+      {/* Footer - Signature */}
+      <footer className="border-t border-border p-3 text-center text-xs text-muted-foreground">
+        Created by{' '}
+        <a
+          href="https://serkanbayraktar.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary hover:underline"
+        >
+          Serkanby
+        </a>
+        {' | '}
+        <a
+          href="https://github.com/Serkanbyx"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary hover:underline"
+        >
+          Github
+        </a>
+      </footer>
     </div>
   );
 }
