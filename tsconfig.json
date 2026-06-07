@@ -14,6 +14,9 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Keep the incremental build cache out of the project root */
+    "tsBuildInfoFile": "./node_modules/.cache/tsconfig.tsbuildinfo",
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,

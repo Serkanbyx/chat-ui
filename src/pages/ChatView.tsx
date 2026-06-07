@@ -12,24 +12,21 @@ import MessageInput from '@/components/chat/MessageInput';
 function ChatView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { setActiveChat, getConversationById } = useChatStore();
+  const setActiveChat = useChatStore((state) => state.setActiveChat);
+  const getConversationById = useChatStore((state) => state.getConversationById);
 
-  // Set active chat when route changes
+  // Sync the active chat with the current route.
+  // The empty state resets it, so no unmount cleanup is needed here. This
+  // avoids a null -> id flicker when navigating directly between chats.
   useEffect(() => {
-    if (id) {
-      const conversation = getConversationById(id);
-      if (conversation) {
-        setActiveChat(id);
-      } else {
-        // Redirect to home if conversation doesn't exist
-        navigate('/');
-      }
-    }
+    if (!id) return;
 
-    // Cleanup on unmount
-    return () => {
-      setActiveChat(null);
-    };
+    if (getConversationById(id)) {
+      setActiveChat(id);
+    } else {
+      // Redirect to home if conversation doesn't exist
+      navigate('/');
+    }
   }, [id, setActiveChat, getConversationById, navigate]);
 
   if (!id) {

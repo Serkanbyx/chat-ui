@@ -55,14 +55,14 @@ export const useChatStore = create<ChatState>((set, get) => ({
     const { currentUser, messages, conversations } = get();
     const timestamp = new Date();
 
-    // Create new message
+    // Create new message (starts as delivered, marked read once the recipient replies)
     const newMessage: Message = {
       id: generateId(),
       conversationId,
       senderId: currentUser.id,
       content,
       timestamp,
-      isRead: true,
+      isRead: false,
     };
 
     // Update messages
@@ -124,10 +124,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
         const currentMessages = get().messages;
         const currentConversations = get().conversations;
 
+        // The recipient replied, so their previous messages are now considered read.
+        const conversationHistory = (currentMessages[conversationId] || []).map(
+          (msg) =>
+            msg.senderId === currentUser.id && !msg.isRead
+              ? { ...msg, isRead: true }
+              : msg
+        );
+
         set({
           messages: {
             ...currentMessages,
-            [conversationId]: [...(currentMessages[conversationId] || []), replyMessage],
+            [conversationId]: [...conversationHistory, replyMessage],
           },
           conversations: currentConversations.map((conv) =>
             conv.id === conversationId

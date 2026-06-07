@@ -16,7 +16,8 @@ interface ConversationItemProps {
 function ConversationItem({ conversation }: ConversationItemProps) {
   const navigate = useNavigate();
   const { id: activeId } = useParams<{ id: string }>();
-  const { getOtherParticipant, currentUser } = useChatStore();
+  const getOtherParticipant = useChatStore((state) => state.getOtherParticipant);
+  const currentUser = useChatStore((state) => state.currentUser);
 
   const otherParticipant = getOtherParticipant(conversation);
   const isActive = activeId === conversation.id;

@@ -2,12 +2,15 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import ChatLayout from '@/layouts/ChatLayout';
 import ChatView from '@/pages/ChatView';
 import EmptyChat from '@/pages/EmptyChat';
+import { useApplyTheme } from '@/hooks/useApplyTheme';
 
 /**
  * Main application component with routing configuration
  * Routes: / (chat layout), /chat/:id (specific conversation)
  */
 function App() {
+  useApplyTheme();
+
   return (
     <Routes>
       <Route path="/" element={<ChatLayout />}>

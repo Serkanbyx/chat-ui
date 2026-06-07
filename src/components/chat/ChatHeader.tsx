@@ -14,7 +14,8 @@ interface ChatHeaderProps {
  */
 function ChatHeader({ conversationId }: ChatHeaderProps) {
   const navigate = useNavigate();
-  const { getConversationById, getOtherParticipant } = useChatStore();
+  const getConversationById = useChatStore((state) => state.getConversationById);
+  const getOtherParticipant = useChatStore((state) => state.getOtherParticipant);
 
   const conversation = getConversationById(conversationId);
   if (!conversation) return null;

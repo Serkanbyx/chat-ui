@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Search, MessageCircle } from 'lucide-react';
+import { Search, MessageCircle, Moon, Sun } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import ConversationItem from './ConversationItem';
 import { useChatStore } from '@/store/chatStore';
+import { useThemeStore } from '@/store/themeStore';
 
 /**
  * Sidebar component displaying the list of conversations
@@ -11,7 +13,11 @@ import { useChatStore } from '@/store/chatStore';
  */
 function Sidebar() {
   const [searchQuery, setSearchQuery] = useState('');
-  const { conversations, currentUser, getOtherParticipant } = useChatStore();
+  const conversations = useChatStore((state) => state.conversations);
+  const currentUser = useChatStore((state) => state.currentUser);
+  const getOtherParticipant = useChatStore((state) => state.getOtherParticipant);
+  const theme = useThemeStore((state) => state.theme);
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
 
   // Filter conversations based on search query
   const filteredConversations = conversations.filter((conversation) => {
@@ -32,9 +38,22 @@ function Sidebar() {
           <h1 className="text-xl font-semibold">Messages</h1>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">
+          <span className="hidden text-sm text-muted-foreground sm:inline">
             {currentUser.name}
           </span>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            {theme === 'dark' ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
+          </Button>
         </div>
       </div>
 

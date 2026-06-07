@@ -9,6 +9,11 @@ dist-ssr
 build
 *.local
 
+# TypeScript build artifacts
+*.tsbuildinfo
+vite.config.d.ts
+vite.config.d.ts.map
+
 # IDE
 .vscode/*
 !.vscode/extensions.json

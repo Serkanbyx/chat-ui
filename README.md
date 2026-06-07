@@ -12,15 +12,19 @@ A modern, responsive chat application built with React, TypeScript, and Vite. Ex
 ## Features
 
 - **Responsive Design** - Seamlessly adapts to desktop and mobile devices with optimized layouts
+- **Dark Mode** - Toggle between light and dark themes with preference persisted to localStorage
 - **Conversation Management** - Browse, search, and manage multiple chat conversations
 - **Real-Time Messaging** - Send and receive messages with typing indicators and auto-replies
+- **Multiline Composer** - Auto-growing message input with Enter to send and Shift+Enter for new lines
+- **Emoji Picker** - Insert emojis from a lightweight, dependency-free picker
 - **Message Grouping** - Messages intelligently grouped by date (Today, Yesterday, or actual date)
+- **Read Receipts** - Single check for delivered messages and double check once they are read
 - **Auto-Scroll** - Automatically scrolls to the latest message for seamless conversation flow
 - **Form Validation** - Robust input validation using React Hook Form and Zod
 - **Online Status** - Visual indicators showing user availability status
 - **Unread Badges** - Track unread messages with visual notification badges
 - **Modern UI Components** - Built with shadcn/ui and Radix UI primitives
-- **Efficient State Management** - Powered by Zustand for optimal performance
+- **Efficient State Management** - Powered by Zustand with fine-grained selectors for optimal performance
 
 ## Live Demo
 
@@ -132,6 +136,25 @@ const messageSchema = z.object({
 - **Mobile View** - Sidebar and chat view displayed separately with smooth transitions
 - **Desktop View** - Side-by-side layout showing both sidebar and active chat
 
+### Dark Mode
+
+The theme is managed by a dedicated Zustand store with the `persist` middleware:
+
+```typescript
+const useThemeStore = create<ThemeState>()(
+  persist(
+    (set) => ({
+      theme: "light",
+      toggleTheme: () =>
+        set((state) => ({ theme: state.theme === "light" ? "dark" : "light" })),
+    }),
+    { name: "chat-ui-theme" }
+  )
+);
+```
+
+The selected theme is saved to `localStorage` and applied to the document root before paint, so there is no flash of the wrong theme on reload.
+
 ## Project Structure
 
 ```
@@ -140,14 +163,17 @@ src/
 │   ├── chat/
 │   │   ├── ChatHeader.tsx       # Chat header with user info
 │   │   ├── ConversationItem.tsx # Sidebar conversation item
+│   │   ├── EmojiPicker.tsx      # Dependency-free emoji picker
 │   │   ├── MessageBubble.tsx    # Individual message bubble
-│   │   ├── MessageInput.tsx     # Message input with validation
+│   │   ├── MessageInput.tsx     # Multiline message input with validation
 │   │   ├── MessageList.tsx      # Message list with grouping
 │   │   ├── Sidebar.tsx          # Conversations sidebar
 │   │   └── TypingIndicator.tsx  # Typing animation
-│   └── ui/                      # shadcn/ui components
+│   └── ui/                      # shadcn/ui components (button, input, textarea, ...)
 ├── data/
 │   └── mockData.ts              # Mock conversations and messages
+├── hooks/
+│   └── useApplyTheme.ts         # Syncs the theme with the document root
 ├── layouts/
 │   └── ChatLayout.tsx           # Main layout wrapper
 ├── lib/
@@ -156,13 +182,18 @@ src/
 │   ├── ChatView.tsx             # Chat conversation view
 │   └── EmptyChat.tsx            # Empty state
 ├── store/
-│   └── chatStore.ts             # Zustand store
+│   ├── chatStore.ts             # Zustand chat store
+│   └── themeStore.ts            # Persisted theme store
 ├── types/
 │   └── index.ts                 # TypeScript interfaces
 ├── App.tsx                      # App component with routes
 ├── main.tsx                     # Entry point
 └── index.css                    # Global styles
 ```
+
+## Build Guide
+
+A step-by-step playbook used to build this project from scratch is available at [docs/build-guide.md](docs/build-guide.md). It documents the phases, architecture, reusable patterns, and common pitfalls.
 
 ## Routes
 
@@ -211,9 +242,13 @@ Update the color scheme in `tailwind.config.js` and `src/index.css` for custom t
 ### Completed Features
 
 ✅ Responsive sidebar with conversation list  
+✅ Dark mode toggle with persisted preference  
 ✅ Real-time message sending and receiving  
+✅ Multiline composer (Enter to send, Shift+Enter for new line)  
+✅ Emoji picker  
 ✅ Typing indicator animation  
 ✅ Message grouping by date  
+✅ Read receipts (delivered / read)  
 ✅ Auto-scroll to latest message  
 ✅ Online/offline status indicators  
 ✅ Unread message badges  
@@ -222,7 +257,6 @@ Update the color scheme in `tailwind.config.js` and `src/index.css` for custom t
 
 ### Future Features
 
-- [ ] Dark mode toggle
 - [ ] Message search functionality
 - [ ] File and image sharing
 - [ ] Group conversations

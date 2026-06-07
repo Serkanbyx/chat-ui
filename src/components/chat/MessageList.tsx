@@ -17,30 +17,27 @@ function MessageList({ conversationId }: MessageListProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { getConversationMessages, isTyping, currentUser } = useChatStore();
-  const messages = getConversationMessages(conversationId);
+  const isTyping = useChatStore((state) => state.isTyping);
+  const currentUser = useChatStore((state) => state.currentUser);
+  const messages = useChatStore((state) => state.messages[conversationId]) ?? [];
 
   /**
    * Group messages by date for display with date headers
    */
   const groupedMessages: MessageGroup[] = useMemo(() => {
-    const groups: MessageGroup[] = [];
-
-    messages.forEach((message: Message) => {
+    return messages.reduce<MessageGroup[]>((groups, message: Message) => {
       const messageDate = new Date(message.timestamp);
       const lastGroup = groups[groups.length - 1];
 
       if (lastGroup && isSameDay(lastGroup.date, messageDate)) {
-        lastGroup.messages.push(message);
-      } else {
-        groups.push({
-          date: messageDate,
-          messages: [message],
-        });
+        return [
+          ...groups.slice(0, -1),
+          { ...lastGroup, messages: [...lastGroup.messages, message] },
+        ];
       }
-    });
 
-    return groups;
+      return [...groups, { date: messageDate, messages: [message] }];
+    }, []);
   }, [messages]);
 
   /**

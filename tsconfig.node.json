@@ -17,6 +17,10 @@
     "declarationMap": true,
     "emitDeclarationOnly": true,
 
+    /* Keep generated build artifacts out of the project root */
+    "outDir": "./node_modules/.cache/tsconfig.node",
+    "tsBuildInfoFile": "./node_modules/.cache/tsconfig.node.tsbuildinfo",
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
